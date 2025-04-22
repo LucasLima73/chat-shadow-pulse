@@ -6,7 +6,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { Send } from 'lucide-react';
 
-const EVOLUTION_API_URL = "http://82.29.57.79:8080/v1/messages";
+// Usando variável para poder mudar facilmente o protocolo se necessário
+const EVOLUTION_API_URL = "//82.29.57.79:8080/v1/messages";
 const DEVICE_API_KEY = "DD9E3CEFE38C-41C1-BF9D-061CFD8705DF";
 
 const Index = () => {
@@ -48,7 +49,13 @@ const Index = () => {
         message: message,
       };
 
-      const response = await fetch(EVOLUTION_API_URL, {
+      // Usando window.location.protocol para determinar dinamicamente o protocolo
+      const protocol = window.location.protocol;
+      const apiUrl = `${protocol}${EVOLUTION_API_URL}`;
+      
+      console.log(`Enviando requisição para: ${apiUrl}`);
+
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -71,6 +78,7 @@ const Index = () => {
         );
       }
     } catch (error) {
+      console.error('Erro ao enviar mensagem:', error);
       toast.error('Erro de conexão ao enviar mensagem.');
     } finally {
       setLoading(false);
