@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,7 +7,7 @@ import { toast } from 'sonner';
 import { Send } from 'lucide-react';
 import axios from 'axios';
 
-const DEVICE_INSTANCE = "teste2";
+const DEVICE_INSTANCE = "teste";
 const EVOLUTION_API_URL = `https://evo.mao-amiga.site/message/sendText/${DEVICE_INSTANCE}`;
 const API_KEY = "429683C4C977415CAAFCCE10F7D57E11"; // API key adicionada
 
