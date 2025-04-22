@@ -9,7 +9,7 @@ import { Send } from 'lucide-react';
 // Atualizado para usar a instância teste2
 const DEVICE_INSTANCE = "teste2";
 const EVOLUTION_API_URL = `https://evo.mao-amiga.site/message/sendText/${DEVICE_INSTANCE}`;
-const API_KEY = ""; // Adicione sua API key aqui
+const API_KEY = "429683C4C977415CAAFCCE10F7D57E11"; // API key adicionada
 
 const Index = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -63,7 +63,7 @@ const Index = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`, // Adiciona o token de autorização
+          'Authorization': `Bearer ${API_KEY}`, // Adiciona o token de autorização
         },
         body: JSON.stringify(payload),
       });
