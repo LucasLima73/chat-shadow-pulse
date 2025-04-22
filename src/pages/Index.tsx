@@ -14,14 +14,37 @@ const Index = () => {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const validatePhoneNumber = (number: string) => {
+    // Remover caracteres não numéricos
+    const cleanedNumber = number.replace(/\D/g, '');
+    
+    // Verificar se o número tem entre 10 e 14 dígitos
+    return cleanedNumber.length >= 10 && cleanedNumber.length <= 14;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validar número de telefone
+    if (!validatePhoneNumber(phoneNumber)) {
+      toast.error('Número de telefone inválido. Verifique o número.');
+      return;
+    }
+
+    // Validar mensagem
+    if (message.trim().length === 0) {
+      toast.error('Por favor, digite uma mensagem.');
+      return;
+    }
+
     setLoading(true);
 
     try {
-      // Call EvolutionAPI to send WhatsApp message
+      // Limpar número de telefone removendo caracteres não numéricos
+      const cleanedNumber = phoneNumber.replace(/\D/g, '');
+
       const payload = {
-        number: phoneNumber,
+        number: cleanedNumber,
         message: message,
       };
 
@@ -41,7 +64,6 @@ const Index = () => {
         setPhoneNumber('');
         setMessage('');
       } else {
-        // Most APIs will have an error message, show it if available
         toast.error(
           data?.message
             ? `Erro ao enviar: ${data.message}`
