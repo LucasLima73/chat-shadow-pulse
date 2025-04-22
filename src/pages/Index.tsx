@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -5,9 +6,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { Send } from 'lucide-react';
 
-// Updated to the correct Evolution API endpoint
-const EVOLUTION_API_URL = "https://evo.mao-amiga.site/api/message";
-const DEVICE_API_KEY = "DD9E3CEFE38C-41C1-BF9D-061CFD8705DF";
+// Atualizado para Evolution v2 conforme documentação
+const DEVICE_INSTANCE = "DD9E3CEFE38C-41C1-BF9D-061CFD8705DF";
+const EVOLUTION_API_URL = `https://evo.mao-amiga.site/message/sendText/${DEVICE_INSTANCE}`;
 
 const Index = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -17,14 +18,14 @@ const Index = () => {
   const validatePhoneNumber = (number: string) => {
     // Remover caracteres não numéricos
     const cleanedNumber = number.replace(/\D/g, '');
-    
+
     // Verificar se o número tem entre 10 e 14 dígitos
     return cleanedNumber.length >= 10 && cleanedNumber.length <= 14;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validar número de telefone
     if (!validatePhoneNumber(phoneNumber)) {
       toast.error('Número de telefone inválido. Verifique o número.');
@@ -54,7 +55,6 @@ const Index = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          apikey: DEVICE_API_KEY,
         },
         body: JSON.stringify(payload),
       });
