@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,8 +5,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { Send } from 'lucide-react';
 
-// Atualizado para Evolution v2 conforme documentação
-const DEVICE_INSTANCE = "DD9E3CEFE38C-41C1-BF9D-061CFD8705DF";
+// Atualizado para usar a instância teste2
+const DEVICE_INSTANCE = "teste2";
 const EVOLUTION_API_URL = `https://evo.mao-amiga.site/message/sendText/${DEVICE_INSTANCE}`;
 
 const Index = () => {
