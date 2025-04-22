@@ -9,7 +9,7 @@ import axios from 'axios';
 
 const DEVICE_INSTANCE = "teste";
 const EVOLUTION_API_URL = `https://evo.mao-amiga.site/message/sendText/${DEVICE_INSTANCE}`;
-const API_KEY = "429683C4C977415CAAFCCE10F7D57E11"; // API key adicionada
+const API_KEY = "429683C4C977415CAAFCCE10F7D57E11";
 
 const Index = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -48,16 +48,18 @@ const Index = () => {
       console.log(`>> Enviando mensagem para o número: ${cleanedNumber}`);
 
       const payload = {
-        number: cleanedNumber,
-        message: message,
+        number: `+55${cleanedNumber}`,
+        text: message,
       };
 
       console.log(`Enviando requisição para: ${EVOLUTION_API_URL} com axios`);
 
+      console.log(`Payload: `,payload);
+
       const response = await axios.post(EVOLUTION_API_URL, payload, {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${API_KEY}`,
+          'apikey': API_KEY,
         },
       });
 
