@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -7,7 +6,6 @@ import { toast } from 'sonner';
 import { Send } from 'lucide-react';
 import axios from 'axios';
 
-// Atualizado para usar a instância teste2
 const DEVICE_INSTANCE = "teste2";
 const EVOLUTION_API_URL = `https://evo.mao-amiga.site/message/sendText/${DEVICE_INSTANCE}`;
 const API_KEY = "429683C4C977415CAAFCCE10F7D57E11"; // API key adicionada
@@ -19,29 +17,23 @@ const Index = () => {
   const [apiKey, setApiKey] = useState(API_KEY);
 
   const validatePhoneNumber = (number: string) => {
-    // Remover caracteres não numéricos
     const cleanedNumber = number.replace(/\D/g, '');
-
-    // Verificar se o número tem entre 10 e 14 dígitos
     return cleanedNumber.length >= 10 && cleanedNumber.length <= 14;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validar número de telefone
     if (!validatePhoneNumber(phoneNumber)) {
       toast.error('Número de telefone inválido. Verifique o número.');
       return;
     }
 
-    // Validar mensagem
     if (message.trim().length === 0) {
       toast.error('Por favor, digite uma mensagem.');
       return;
     }
 
-    // Validar API key
     if (!apiKey.trim()) {
       toast.error('API Key não configurada. Por favor, adicione uma API Key válida.');
       return;
@@ -50,8 +42,9 @@ const Index = () => {
     setLoading(true);
 
     try {
-      // Limpar número de telefone removendo caracteres não numéricos
       const cleanedNumber = phoneNumber.replace(/\D/g, '');
+
+      console.log(`>> Enviando mensagem para o número: ${cleanedNumber}`);
 
       const payload = {
         number: cleanedNumber,
@@ -138,4 +131,3 @@ const Index = () => {
 };
 
 export default Index;
-
