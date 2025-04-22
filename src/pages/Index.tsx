@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,11 +9,13 @@ import { Send } from 'lucide-react';
 // Atualizado para usar a instância teste2
 const DEVICE_INSTANCE = "teste2";
 const EVOLUTION_API_URL = `https://evo.mao-amiga.site/message/sendText/${DEVICE_INSTANCE}`;
+const API_KEY = ""; // Adicione sua API key aqui
 
 const Index = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [apiKey, setApiKey] = useState(API_KEY);
 
   const validatePhoneNumber = (number: string) => {
     // Remover caracteres não numéricos
@@ -37,6 +40,12 @@ const Index = () => {
       return;
     }
 
+    // Validar API key
+    if (!apiKey.trim()) {
+      toast.error('API Key não configurada. Por favor, adicione uma API Key válida.');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -54,6 +63,7 @@ const Index = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`, // Adiciona o token de autorização
         },
         body: JSON.stringify(payload),
       });
@@ -100,6 +110,15 @@ const Index = () => {
               onChange={(e) => setMessage(e.target.value)}
               required
               rows={4}
+            />
+          </div>
+          <div>
+            <Input 
+              placeholder="API Key para autenticação"
+              value={apiKey}
+              onChange={(e) => setApiKey(e.target.value)}
+              type="password"
+              className="mb-4"
             />
           </div>
           <Button 
