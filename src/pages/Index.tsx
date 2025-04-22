@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { Send } from 'lucide-react';
+import axios from 'axios';
 
 // Atualizado para usar a instância teste2
 const DEVICE_INSTANCE = "teste2";
@@ -57,33 +58,33 @@ const Index = () => {
         message: message,
       };
 
-      console.log(`Enviando requisição para: ${EVOLUTION_API_URL}`);
+      console.log(`Enviando requisição para: ${EVOLUTION_API_URL} com axios`);
 
-      const response = await fetch(EVOLUTION_API_URL, {
-        method: 'POST',
+      const response = await axios.post(EVOLUTION_API_URL, payload, {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${API_KEY}`, // Adiciona o token de autorização
+          'Authorization': `Bearer ${API_KEY}`,
         },
-        body: JSON.stringify(payload),
       });
 
-      const data = await response.json();
-
-      if (response.ok) {
+      if (response.status === 200 && response.data) {
         toast.success('Mensagem enviada com sucesso!');
         setPhoneNumber('');
         setMessage('');
       } else {
         toast.error(
-          data?.message
-            ? `Erro ao enviar: ${data.message}`
+          response.data?.message
+            ? `Erro ao enviar: ${response.data.message}`
             : 'Erro ao enviar mensagem.'
         );
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erro ao enviar mensagem:', error);
-      toast.error('Erro de conexão ao enviar mensagem.');
+      if (error.response?.data?.message) {
+        toast.error(`Erro ao enviar: ${error.response.data.message}`);
+      } else {
+        toast.error('Erro de conexão ao enviar mensagem.');
+      }
     } finally {
       setLoading(false);
     }
@@ -137,3 +138,4 @@ const Index = () => {
 };
 
 export default Index;
+
