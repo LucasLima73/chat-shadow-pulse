@@ -5,8 +5,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { Send } from 'lucide-react';
 
-// Updated to the new Evolution API URL with HTTPS
-const EVOLUTION_API_URL = "https://evo.mao-amiga.site/v1/messages";
+// Updated to the correct Evolution API endpoint
+const EVOLUTION_API_URL = "https://evo.mao-amiga.site/api/message";
 const DEVICE_API_KEY = "DD9E3CEFE38C-41C1-BF9D-061CFD8705DF";
 
 const Index = () => {
