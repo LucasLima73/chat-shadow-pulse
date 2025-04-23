@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,6 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { Send } from 'lucide-react';
 import axios from 'axios';
+import { supabase } from '@/integrations/supabase/client';
 
 const DEVICE_INSTANCE = "teste";
 const EVOLUTION_API_URL = `https://evo.mao-amiga.site/message/sendText/${DEVICE_INSTANCE}`;
@@ -20,6 +20,15 @@ const Index = () => {
   const validatePhoneNumber = (number: string) => {
     const cleanedNumber = number.replace(/\D/g, '');
     return cleanedNumber.length >= 10 && cleanedNumber.length <= 14;
+  };
+
+  const formatMessageWithTemplate = (messageText: string) => {
+    return `💌 Olá, alguém te mandou uma mensagem anônima:
+
+📝 "${messageText}"
+
+✨ Mande você também sua mensagem anônima acessando:
+https://seudominio.com.br/correio-elegante`;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -44,13 +53,30 @@ const Index = () => {
 
     try {
       const cleanedNumber = phoneNumber.replace(/\D/g, '');
+      const formattedMessage = formatMessageWithTemplate(message);
 
       console.log(`>> Enviando mensagem para o número: ${cleanedNumber}`);
 
-      // Modified the payload structure to match what works in Insomnia
+      // Save message to database first
+      const { error: dbError } = await supabase
+        .from('messages')
+        .insert([
+          {
+            recipient_phone: cleanedNumber,
+            message_text: message,
+            user_id: (await supabase.auth.getUser()).data.user?.id
+          }
+        ]);
+
+      if (dbError) {
+        console.error('Erro ao salvar mensagem:', dbError);
+        toast.error('Erro ao salvar mensagem no banco de dados.');
+        return;
+      }
+
       const payload = {
-        number: cleanedNumber,  // Removed the +55 prefix, letting the API handle it
-        text: message,
+        number: cleanedNumber,
+        text: formattedMessage,
       };
 
       console.log(`Enviando requisição para: ${EVOLUTION_API_URL} com payload:`, payload);
@@ -58,15 +84,25 @@ const Index = () => {
       const response = await axios.post(EVOLUTION_API_URL, payload, {
         headers: {
           'Content-Type': 'application/json',
-          'apikey': apiKey, // Using the user-provided apiKey instead of hardcoded API_KEY
+          'apikey': apiKey,
         },
       });
 
       console.log('Response status:', response.status);
       console.log('Response data:', response.data);
 
-      // Changed from status 200 to 201
       if (response.status === 201 && response.data) {
+        // Update message status in database
+        const { error: updateError } = await supabase
+          .from('messages')
+          .update({ status: 'sent' })
+          .eq('recipient_phone', cleanedNumber)
+          .eq('message_text', message);
+
+        if (updateError) {
+          console.error('Erro ao atualizar status da mensagem:', updateError);
+        }
+
         toast.success('Mensagem enviada com sucesso!');
         setPhoneNumber('');
         setMessage('');
