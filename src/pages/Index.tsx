@@ -47,21 +47,23 @@ const Index = () => {
 
       console.log(`>> Enviando mensagem para o número: ${cleanedNumber}`);
 
+      // Modified the payload structure to match what works in Insomnia
       const payload = {
-        number: `+55${cleanedNumber}`,
+        number: cleanedNumber,  // Removed the +55 prefix, letting the API handle it
         text: message,
       };
 
-      console.log(`Enviando requisição para: ${EVOLUTION_API_URL} com axios`);
-
-      console.log(`Payload: `, payload);
+      console.log(`Enviando requisição para: ${EVOLUTION_API_URL} com payload:`, payload);
 
       const response = await axios.post(EVOLUTION_API_URL, payload, {
         headers: {
           'Content-Type': 'application/json',
-          'apikey': API_KEY,
+          'apikey': apiKey, // Using the user-provided apiKey instead of hardcoded API_KEY
         },
       });
+
+      console.log('Response status:', response.status);
+      console.log('Response data:', response.data);
 
       // Changed from status 200 to 201
       if (response.status === 201 && response.data) {
@@ -77,6 +79,7 @@ const Index = () => {
       }
     } catch (error: any) {
       console.error('Erro ao enviar mensagem:', error);
+      console.error('Detalhes do erro:', error.response?.data);
       if (error.response?.data?.message) {
         toast.error(`Erro ao enviar: ${error.response.data.message}`);
       } else {
@@ -135,4 +138,3 @@ const Index = () => {
 };
 
 export default Index;
-
