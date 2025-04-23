@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -75,7 +76,7 @@ https://seudominio.com.br/correio-elegante`;
       }
 
       const payload = {
-        number: cleanedNumber,
+        number: `+55${cleanedNumber}`,  // Added +55 prefix
         text: formattedMessage,
       };
 
