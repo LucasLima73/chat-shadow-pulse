@@ -54,7 +54,7 @@ const Index = () => {
 
       console.log(`Enviando requisição para: ${EVOLUTION_API_URL} com axios`);
 
-      console.log(`Payload: `,payload);
+      console.log(`Payload: `, payload);
 
       const response = await axios.post(EVOLUTION_API_URL, payload, {
         headers: {
@@ -63,7 +63,8 @@ const Index = () => {
         },
       });
 
-      if (response.status === 200 && response.data) {
+      // Changed from status 200 to 201
+      if (response.status === 201 && response.data) {
         toast.success('Mensagem enviada com sucesso!');
         setPhoneNumber('');
         setMessage('');
@@ -134,3 +135,4 @@ const Index = () => {
 };
 
 export default Index;
+
