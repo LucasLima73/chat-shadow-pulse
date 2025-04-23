@@ -27,8 +27,7 @@ const Index = () => {
 
 📝 "${messageText}"
 
-✨ Mande você também sua mensagem anônima acessando:
-https://seudominio.com.br/correio-elegante`;
+✨ Mande você também sua mensagem anônima!`;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
