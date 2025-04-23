@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -57,11 +56,6 @@ https://seudominio.com.br/correio-elegante`;
       const formattedMessage = formatMessageWithTemplate(message);
 
       console.log(`>> Enviando mensagem para o número: ${cleanedNumber}`);
-
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
-      if (authError) {
-        console.warn('Erro ao obter usuário:', authError);
-      }
       
       const { error: dbError } = await supabase
         .from('messages')
@@ -69,7 +63,7 @@ https://seudominio.com.br/correio-elegante`;
           {
             recipient_phone: cleanedNumber,
             message_text: message,
-            user_id: user?.id || '00000000-0000-0000-0000-000000000000'
+            user_id: '00000000-0000-0000-0000-000000000000'
           }
         ]);
 
