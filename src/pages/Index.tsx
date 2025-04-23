@@ -58,29 +58,30 @@ https://seudominio.com.br/correio-elegante`;
 
       console.log(`>> Enviando mensagem para o número: ${cleanedNumber}`);
 
-      // Get current user (might be null for anonymous users)
-      const { data: { user } } = await supabase.auth.getUser();
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (authError) {
+        console.warn('Erro ao obter usuário:', authError);
+      }
       
-      // Save message to database first - with anonymous handling
       const { error: dbError } = await supabase
         .from('messages')
         .insert([
           {
             recipient_phone: cleanedNumber,
             message_text: message,
-            user_id: user?.id || '00000000-0000-0000-0000-000000000000' // Use a default UUID for anonymous users
+            user_id: user?.id || '00000000-0000-0000-0000-000000000000'
           }
         ]);
 
       if (dbError) {
         console.error('Erro ao salvar mensagem:', dbError);
-        toast.error(`Erro ao salvar mensagem: ${JSON.stringify(dbError)}`);
+        toast.error('Erro ao salvar mensagem. Por favor, tente novamente.');
         setLoading(false);
         return;
       }
 
       const payload = {
-        number: `+55${cleanedNumber}`,  // Added +55 prefix
+        number: `+55${cleanedNumber}`,
         text: formattedMessage,
       };
 
@@ -97,7 +98,6 @@ https://seudominio.com.br/correio-elegante`;
       console.log('Response data:', response.data);
 
       if (response.status === 201 && response.data) {
-        // Update message status in database
         const { error: updateError } = await supabase
           .from('messages')
           .update({ status: 'sent' })
