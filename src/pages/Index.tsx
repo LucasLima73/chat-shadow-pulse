@@ -58,20 +58,24 @@ https://seudominio.com.br/correio-elegante`;
 
       console.log(`>> Enviando mensagem para o número: ${cleanedNumber}`);
 
-      // Save message to database first
+      // Get current user (might be null for anonymous users)
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      // Save message to database first - with anonymous handling
       const { error: dbError } = await supabase
         .from('messages')
         .insert([
           {
             recipient_phone: cleanedNumber,
             message_text: message,
-            user_id: (await supabase.auth.getUser()).data.user?.id
+            user_id: user?.id || '00000000-0000-0000-0000-000000000000' // Use a default UUID for anonymous users
           }
         ]);
 
       if (dbError) {
         console.error('Erro ao salvar mensagem:', dbError);
-        toast.error('Erro ao salvar mensagem no banco de dados.');
+        toast.error(`Erro ao salvar mensagem: ${JSON.stringify(dbError)}`);
+        setLoading(false);
         return;
       }
 
